@@ -1,0 +1,35 @@
+name: Portfolio Monitor
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Beijing time 09:00 and 17:00. GitHub Actions cron uses UTC.
+    - cron: "0 1,9 * * *"
+
+jobs:
+  run-monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run portfolio monitor
+        env:
+          MACRO_BOT_TOKEN: ${{ secrets.MACRO_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PORTFOLIO_CSV_URL: ${{ secrets.PORTFOLIO_CSV_URL }}
+          HISTORY_WEBAPP_URL: ${{ secrets.HISTORY_WEBAPP_URL }}
+          REPORT_TIMEZONE: Asia/Shanghai
+        run: python portfolio_monitor.py
