@@ -1,0 +1,9 @@
+requests
+ccxt
+akshare
+yfinance
+pandas
+lxml
+beautifulsoup4
+html5lib
+openpyxl
